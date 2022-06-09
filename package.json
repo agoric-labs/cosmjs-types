@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "long": "^4.0.0",
-    "protobufjs": "~6.11.2"
+    "protobufjs": "agoric-labs/protobuf.js#Agoric-built"
   },
   "devDependencies": {
     "@types/long": "^4.0.1",

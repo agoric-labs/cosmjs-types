@@ -39,7 +39,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:15.6.2"],
             ["long", "npm:4.0.0"],
             ["prettier", "npm:2.6.2"],
-            ["protobufjs", "npm:6.11.2"],
+            ["protobufjs", "https://github.com/agoric-labs/protobuf.js.git#commit=aa160c7f7300b89342492a8e6920491810fa4dde"],
             ["ts-proto", "npm:1.110.4"],
             ["typescript", "patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=ddd1e8"]
           ],
@@ -181,7 +181,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:15.6.2"],
             ["long", "npm:4.0.0"],
             ["prettier", "npm:2.6.2"],
-            ["protobufjs", "npm:6.11.2"],
+            ["protobufjs", "https://github.com/agoric-labs/protobuf.js.git#commit=aa160c7f7300b89342492a8e6920491810fa4dde"],
             ["ts-proto", "npm:1.110.4"],
             ["typescript", "patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=ddd1e8"]
           ],
@@ -234,6 +234,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["protobufjs", [
+        ["https://github.com/agoric-labs/protobuf.js.git#commit=aa160c7f7300b89342492a8e6920491810fa4dde", {
+          "packageLocation": "./.yarn/unplugged/protobufjs-https-c67e56d9f8/node_modules/protobufjs/",
+          "packageDependencies": [
+            ["protobufjs", "https://github.com/agoric-labs/protobuf.js.git#commit=aa160c7f7300b89342492a8e6920491810fa4dde"],
+            ["@protobufjs/aspromise", "npm:1.1.2"],
+            ["@protobufjs/base64", "npm:1.1.2"],
+            ["@protobufjs/codegen", "npm:2.0.4"],
+            ["@protobufjs/eventemitter", "npm:1.1.0"],
+            ["@protobufjs/fetch", "npm:1.1.0"],
+            ["@protobufjs/float", "npm:1.0.2"],
+            ["@protobufjs/inquire", "npm:1.1.0"],
+            ["@protobufjs/path", "npm:1.1.2"],
+            ["@protobufjs/pool", "npm:1.1.0"],
+            ["@protobufjs/utf8", "npm:1.1.0"],
+            ["@types/long", "npm:4.0.1"],
+            ["@types/node", "npm:15.6.1"],
+            ["long", "npm:4.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:6.11.2", {
           "packageLocation": "./.yarn/unplugged/protobufjs-npm-6.11.2-9b422ce98e/node_modules/protobufjs/",
           "packageDependencies": [
