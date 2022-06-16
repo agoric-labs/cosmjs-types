@@ -8,7 +8,7 @@ OUT_DIR="./src"
 COSMOS_SDK_DIR="./cosmos-sdk-0.45/proto"
 COSMOS_SDK_THIRD_PARTY_DIR="./cosmos-sdk-0.45/third_party/proto"
 
-PLUGIN_PATH="$(realpath ./bin)/protoc-gen-ts_proto_yarn_2"
+PLUGIN_PATH="$(cd ./bin >/dev/null && pwd -P)/protoc-gen-ts_proto_yarn_2"
 
 mkdir -p "$OUT_DIR"
 

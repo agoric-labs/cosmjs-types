@@ -5,7 +5,7 @@ command -v shellcheck >/dev/null && shellcheck "$0"
 TS_PROTO_OPTS="esModuleInterop=true,forceLong=long,useOptionals=messages,useDate=false"
 
 OUT_DIR="./src"
-PLUGIN_PATH="$(realpath ./bin)/protoc-gen-ts_proto_yarn_2"
+PLUGIN_PATH="$(cd ./bin >/dev/null && pwd -P)/protoc-gen-ts_proto_yarn_2"
 
 mkdir -p "$OUT_DIR"
 
