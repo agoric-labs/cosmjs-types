@@ -69,7 +69,7 @@ export const CommitInfo = {
 
   fromJSON(object: any): CommitInfo {
     return {
-      version: isSet(object.version) ? Long.fromString(object.version) : Long.ZERO,
+      version: isSet(object.version) ? Long.fromValue(object.version) : Long.ZERO,
       storeInfos: Array.isArray(object?.storeInfos)
         ? object.storeInfos.map((e: any) => StoreInfo.fromJSON(e))
         : [],
@@ -196,7 +196,7 @@ export const CommitID = {
 
   fromJSON(object: any): CommitID {
     return {
-      version: isSet(object.version) ? Long.fromString(object.version) : Long.ZERO,
+      version: isSet(object.version) ? Long.fromValue(object.version) : Long.ZERO,
       hash: isSet(object.hash) ? bytesFromBase64(object.hash) : new Uint8Array(),
     };
   },
@@ -221,7 +221,7 @@ export const CommitID = {
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") return globalThis;
   if (typeof self !== "undefined") return self;
   if (typeof window !== "undefined") return window;
@@ -230,7 +230,7 @@ var globalThis: any = (() => {
 })();
 
 const atob: (b64: string) => string =
-  globalThis.atob || ((b64) => globalThis.Buffer.from(b64, "base64").toString("binary"));
+  tsProtoGlobalThis.atob || ((b64) => tsProtoGlobalThis.Buffer.from(b64, "base64").toString("binary"));
 function bytesFromBase64(b64: string): Uint8Array {
   const bin = atob(b64);
   const arr = new Uint8Array(bin.length);
@@ -241,7 +241,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 const btoa: (bin: string) => string =
-  globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
+  tsProtoGlobalThis.btoa || ((bin) => tsProtoGlobalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
   arr.forEach((byte) => {

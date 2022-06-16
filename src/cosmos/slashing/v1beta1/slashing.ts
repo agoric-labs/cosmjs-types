@@ -113,12 +113,12 @@ export const ValidatorSigningInfo = {
   fromJSON(object: any): ValidatorSigningInfo {
     return {
       address: isSet(object.address) ? String(object.address) : "",
-      startHeight: isSet(object.startHeight) ? Long.fromString(object.startHeight) : Long.ZERO,
-      indexOffset: isSet(object.indexOffset) ? Long.fromString(object.indexOffset) : Long.ZERO,
+      startHeight: isSet(object.startHeight) ? Long.fromValue(object.startHeight) : Long.ZERO,
+      indexOffset: isSet(object.indexOffset) ? Long.fromValue(object.indexOffset) : Long.ZERO,
       jailedUntil: isSet(object.jailedUntil) ? fromJsonTimestamp(object.jailedUntil) : undefined,
       tombstoned: isSet(object.tombstoned) ? Boolean(object.tombstoned) : false,
       missedBlocksCounter: isSet(object.missedBlocksCounter)
-        ? Long.fromString(object.missedBlocksCounter)
+        ? Long.fromValue(object.missedBlocksCounter)
         : Long.ZERO,
     };
   },
@@ -222,7 +222,7 @@ export const Params = {
   fromJSON(object: any): Params {
     return {
       signedBlocksWindow: isSet(object.signedBlocksWindow)
-        ? Long.fromString(object.signedBlocksWindow)
+        ? Long.fromValue(object.signedBlocksWindow)
         : Long.ZERO,
       minSignedPerWindow: isSet(object.minSignedPerWindow)
         ? bytesFromBase64(object.minSignedPerWindow)
@@ -282,7 +282,7 @@ export const Params = {
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") return globalThis;
   if (typeof self !== "undefined") return self;
   if (typeof window !== "undefined") return window;
@@ -291,7 +291,7 @@ var globalThis: any = (() => {
 })();
 
 const atob: (b64: string) => string =
-  globalThis.atob || ((b64) => globalThis.Buffer.from(b64, "base64").toString("binary"));
+  tsProtoGlobalThis.atob || ((b64) => tsProtoGlobalThis.Buffer.from(b64, "base64").toString("binary"));
 function bytesFromBase64(b64: string): Uint8Array {
   const bin = atob(b64);
   const arr = new Uint8Array(bin.length);
@@ -302,7 +302,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 const btoa: (bin: string) => string =
-  globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
+  tsProtoGlobalThis.btoa || ((bin) => tsProtoGlobalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
   arr.forEach((byte) => {

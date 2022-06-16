@@ -932,8 +932,8 @@ export const QueryChannelConsensusStateRequest = {
     return {
       portId: isSet(object.portId) ? String(object.portId) : "",
       channelId: isSet(object.channelId) ? String(object.channelId) : "",
-      revisionNumber: isSet(object.revisionNumber) ? Long.fromString(object.revisionNumber) : Long.UZERO,
-      revisionHeight: isSet(object.revisionHeight) ? Long.fromString(object.revisionHeight) : Long.UZERO,
+      revisionNumber: isSet(object.revisionNumber) ? Long.fromValue(object.revisionNumber) : Long.UZERO,
+      revisionHeight: isSet(object.revisionHeight) ? Long.fromValue(object.revisionHeight) : Long.UZERO,
     };
   },
 
@@ -1099,7 +1099,7 @@ export const QueryPacketCommitmentRequest = {
     return {
       portId: isSet(object.portId) ? String(object.portId) : "",
       channelId: isSet(object.channelId) ? String(object.channelId) : "",
-      sequence: isSet(object.sequence) ? Long.fromString(object.sequence) : Long.UZERO,
+      sequence: isSet(object.sequence) ? Long.fromValue(object.sequence) : Long.UZERO,
     };
   },
 
@@ -1401,7 +1401,7 @@ export const QueryPacketReceiptRequest = {
     return {
       portId: isSet(object.portId) ? String(object.portId) : "",
       channelId: isSet(object.channelId) ? String(object.channelId) : "",
-      sequence: isSet(object.sequence) ? Long.fromString(object.sequence) : Long.UZERO,
+      sequence: isSet(object.sequence) ? Long.fromValue(object.sequence) : Long.UZERO,
     };
   },
 
@@ -1547,7 +1547,7 @@ export const QueryPacketAcknowledgementRequest = {
     return {
       portId: isSet(object.portId) ? String(object.portId) : "",
       channelId: isSet(object.channelId) ? String(object.channelId) : "",
-      sequence: isSet(object.sequence) ? Long.fromString(object.sequence) : Long.UZERO,
+      sequence: isSet(object.sequence) ? Long.fromValue(object.sequence) : Long.UZERO,
     };
   },
 
@@ -1715,7 +1715,7 @@ export const QueryPacketAcknowledgementsRequest = {
       channelId: isSet(object.channelId) ? String(object.channelId) : "",
       pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined,
       packetCommitmentSequences: Array.isArray(object?.packetCommitmentSequences)
-        ? object.packetCommitmentSequences.map((e: any) => Long.fromString(e))
+        ? object.packetCommitmentSequences.map((e: any) => Long.fromValue(e))
         : [],
     };
   },
@@ -1887,7 +1887,7 @@ export const QueryUnreceivedPacketsRequest = {
       portId: isSet(object.portId) ? String(object.portId) : "",
       channelId: isSet(object.channelId) ? String(object.channelId) : "",
       packetCommitmentSequences: Array.isArray(object?.packetCommitmentSequences)
-        ? object.packetCommitmentSequences.map((e: any) => Long.fromString(e))
+        ? object.packetCommitmentSequences.map((e: any) => Long.fromValue(e))
         : [],
     };
   },
@@ -1964,7 +1964,7 @@ export const QueryUnreceivedPacketsResponse = {
 
   fromJSON(object: any): QueryUnreceivedPacketsResponse {
     return {
-      sequences: Array.isArray(object?.sequences) ? object.sequences.map((e: any) => Long.fromString(e)) : [],
+      sequences: Array.isArray(object?.sequences) ? object.sequences.map((e: any) => Long.fromValue(e)) : [],
       height: isSet(object.height) ? Height.fromJSON(object.height) : undefined,
     };
   },
@@ -2047,7 +2047,7 @@ export const QueryUnreceivedAcksRequest = {
       portId: isSet(object.portId) ? String(object.portId) : "",
       channelId: isSet(object.channelId) ? String(object.channelId) : "",
       packetAckSequences: Array.isArray(object?.packetAckSequences)
-        ? object.packetAckSequences.map((e: any) => Long.fromString(e))
+        ? object.packetAckSequences.map((e: any) => Long.fromValue(e))
         : [],
     };
   },
@@ -2122,7 +2122,7 @@ export const QueryUnreceivedAcksResponse = {
 
   fromJSON(object: any): QueryUnreceivedAcksResponse {
     return {
-      sequences: Array.isArray(object?.sequences) ? object.sequences.map((e: any) => Long.fromString(e)) : [],
+      sequences: Array.isArray(object?.sequences) ? object.sequences.map((e: any) => Long.fromValue(e)) : [],
       height: isSet(object.height) ? Height.fromJSON(object.height) : undefined,
     };
   },
@@ -2254,7 +2254,7 @@ export const QueryNextSequenceReceiveResponse = {
   fromJSON(object: any): QueryNextSequenceReceiveResponse {
     return {
       nextSequenceReceive: isSet(object.nextSequenceReceive)
-        ? Long.fromString(object.nextSequenceReceive)
+        ? Long.fromValue(object.nextSequenceReceive)
         : Long.UZERO,
       proof: isSet(object.proof) ? bytesFromBase64(object.proof) : new Uint8Array(),
       proofHeight: isSet(object.proofHeight) ? Height.fromJSON(object.proofHeight) : undefined,
@@ -2459,7 +2459,7 @@ interface Rpc {
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") return globalThis;
   if (typeof self !== "undefined") return self;
   if (typeof window !== "undefined") return window;
@@ -2468,7 +2468,7 @@ var globalThis: any = (() => {
 })();
 
 const atob: (b64: string) => string =
-  globalThis.atob || ((b64) => globalThis.Buffer.from(b64, "base64").toString("binary"));
+  tsProtoGlobalThis.atob || ((b64) => tsProtoGlobalThis.Buffer.from(b64, "base64").toString("binary"));
 function bytesFromBase64(b64: string): Uint8Array {
   const bin = atob(b64);
   const arr = new Uint8Array(bin.length);
@@ -2479,7 +2479,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 const btoa: (bin: string) => string =
-  globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
+  tsProtoGlobalThis.btoa || ((bin) => tsProtoGlobalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
   arr.forEach((byte) => {

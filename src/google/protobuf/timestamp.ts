@@ -56,16 +56,7 @@ export const protobufPackage = "google.protobuf";
  *         .setNanos((int) ((millis % 1000) * 1000000)).build();
  *
  *
- * Example 5: Compute Timestamp from Java `Instant.now()`.
- *
- *     Instant now = Instant.now();
- *
- *     Timestamp timestamp =
- *         Timestamp.newBuilder().setSeconds(now.getEpochSecond())
- *             .setNanos(now.getNano()).build();
- *
- *
- * Example 6: Compute Timestamp from current time in Python.
+ * Example 5: Compute Timestamp from current time in Python.
  *
  *     timestamp = Timestamp()
  *     timestamp.GetCurrentTime()
@@ -151,7 +142,7 @@ export const Timestamp = {
 
   fromJSON(object: any): Timestamp {
     return {
-      seconds: isSet(object.seconds) ? Long.fromString(object.seconds) : Long.ZERO,
+      seconds: isSet(object.seconds) ? Long.fromValue(object.seconds) : Long.ZERO,
       nanos: isSet(object.nanos) ? Number(object.nanos) : 0,
     };
   },

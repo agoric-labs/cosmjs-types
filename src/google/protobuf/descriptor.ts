@@ -134,30 +134,6 @@ export interface FieldDescriptorProto {
    */
   jsonName: string;
   options?: FieldOptions;
-  /**
-   * If true, this is a proto3 "optional". When a proto3 field is optional, it
-   * tracks presence regardless of field type.
-   *
-   * When proto3_optional is true, this field must be belong to a oneof to
-   * signal to old proto3 clients that presence is tracked for this field. This
-   * oneof is known as a "synthetic" oneof, and this field must be its sole
-   * member (each proto3 optional field gets its own synthetic oneof). Synthetic
-   * oneofs exist in the descriptor only, and do not generate any API. Synthetic
-   * oneofs must be ordered after all "real" oneofs.
-   *
-   * For message fields, proto3_optional doesn't create any semantic change,
-   * since non-repeated message fields always track presence. However it still
-   * indicates the semantic detail of whether the user wrote "optional" or not.
-   * This can be useful for round-tripping the .proto file. For consistency we
-   * give message fields a synthetic oneof also, even though it is not required
-   * to track presence. This is especially important because the parser can't
-   * tell if a field is a message or an enum, so it must always create a
-   * synthetic oneof.
-   *
-   * Proto2 optional fields do not set this flag, because they already indicate
-   * optional with `LABEL_OPTIONAL`.
-   */
-  proto3Optional: boolean;
 }
 
 export enum FieldDescriptorProto_Type {
@@ -305,8 +281,9 @@ export function fieldDescriptorProto_TypeToJSON(object: FieldDescriptorProto_Typ
       return "TYPE_SINT32";
     case FieldDescriptorProto_Type.TYPE_SINT64:
       return "TYPE_SINT64";
+    case FieldDescriptorProto_Type.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -344,8 +321,9 @@ export function fieldDescriptorProto_LabelToJSON(object: FieldDescriptorProto_La
       return "LABEL_REQUIRED";
     case FieldDescriptorProto_Label.LABEL_REPEATED:
       return "LABEL_REPEATED";
+    case FieldDescriptorProto_Label.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -427,18 +405,18 @@ export interface FileOptions {
    */
   javaPackage: string;
   /**
-   * Controls the name of the wrapper Java class generated for the .proto file.
-   * That class will always contain the .proto file's getDescriptor() method as
-   * well as any top-level extensions defined in the .proto file.
-   * If java_multiple_files is disabled, then all the other classes from the
-   * .proto file will be nested inside the single wrapper outer class.
+   * If set, all the classes from the .proto file are wrapped in a single
+   * outer class with the given name.  This applies to both Proto1
+   * (equivalent to the old "--one_java_file" option) and Proto2 (where
+   * a .proto always translates to a single class, but you may want to
+   * explicitly choose the class name).
    */
   javaOuterClassname: string;
   /**
-   * If enabled, then the Java code generator will generate a separate .java
+   * If set true, then the Java code generator will generate a separate .java
    * file for each top-level message, enum, and service defined in the .proto
-   * file.  Thus, these types will *not* be nested inside the wrapper class
-   * named by java_outer_classname.  However, the wrapper class will still be
+   * file.  Thus, these types will *not* be nested inside the outer class
+   * named by java_outer_classname.  However, the outer class will still be
    * generated to contain the file's getDescriptor() method as well as any
    * top-level extensions defined in the file.
    */
@@ -576,8 +554,9 @@ export function fileOptions_OptimizeModeToJSON(object: FileOptions_OptimizeMode)
       return "CODE_SIZE";
     case FileOptions_OptimizeMode.LITE_RUNTIME:
       return "LITE_RUNTIME";
+    case FileOptions_OptimizeMode.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -752,8 +731,9 @@ export function fieldOptions_CTypeToJSON(object: FieldOptions_CType): string {
       return "CORD";
     case FieldOptions_CType.STRING_PIECE:
       return "STRING_PIECE";
+    case FieldOptions_CType.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -793,8 +773,9 @@ export function fieldOptions_JSTypeToJSON(object: FieldOptions_JSType): string {
       return "JS_STRING";
     case FieldOptions_JSType.JS_NUMBER:
       return "JS_NUMBER";
+    case FieldOptions_JSType.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -897,8 +878,9 @@ export function methodOptions_IdempotencyLevelToJSON(object: MethodOptions_Idemp
       return "NO_SIDE_EFFECTS";
     case MethodOptions_IdempotencyLevel.IDEMPOTENT:
       return "IDEMPOTENT";
+    case MethodOptions_IdempotencyLevel.UNRECOGNIZED:
     default:
-      return "UNKNOWN";
+      return "UNRECOGNIZED";
   }
 }
 
@@ -1796,7 +1778,6 @@ function createBaseFieldDescriptorProto(): FieldDescriptorProto {
     oneofIndex: 0,
     jsonName: "",
     options: undefined,
-    proto3Optional: false,
   };
 }
 
@@ -1831,9 +1812,6 @@ export const FieldDescriptorProto = {
     }
     if (message.options !== undefined) {
       FieldOptions.encode(message.options, writer.uint32(66).fork()).ldelim();
-    }
-    if (message.proto3Optional === true) {
-      writer.uint32(136).bool(message.proto3Optional);
     }
     return writer;
   },
@@ -1875,9 +1853,6 @@ export const FieldDescriptorProto = {
         case 8:
           message.options = FieldOptions.decode(reader, reader.uint32());
           break;
-        case 17:
-          message.proto3Optional = reader.bool();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1898,7 +1873,6 @@ export const FieldDescriptorProto = {
       oneofIndex: isSet(object.oneofIndex) ? Number(object.oneofIndex) : 0,
       jsonName: isSet(object.jsonName) ? String(object.jsonName) : "",
       options: isSet(object.options) ? FieldOptions.fromJSON(object.options) : undefined,
-      proto3Optional: isSet(object.proto3Optional) ? Boolean(object.proto3Optional) : false,
     };
   },
 
@@ -1915,7 +1889,6 @@ export const FieldDescriptorProto = {
     message.jsonName !== undefined && (obj.jsonName = message.jsonName);
     message.options !== undefined &&
       (obj.options = message.options ? FieldOptions.toJSON(message.options) : undefined);
-    message.proto3Optional !== undefined && (obj.proto3Optional = message.proto3Optional);
     return obj;
   },
 
@@ -1934,7 +1907,6 @@ export const FieldDescriptorProto = {
       object.options !== undefined && object.options !== null
         ? FieldOptions.fromPartial(object.options)
         : undefined;
-    message.proto3Optional = object.proto3Optional ?? false;
     return message;
   },
 };
@@ -3341,10 +3313,8 @@ export const UninterpretedOption = {
         ? object.name.map((e: any) => UninterpretedOption_NamePart.fromJSON(e))
         : [],
       identifierValue: isSet(object.identifierValue) ? String(object.identifierValue) : "",
-      positiveIntValue: isSet(object.positiveIntValue)
-        ? Long.fromString(object.positiveIntValue)
-        : Long.UZERO,
-      negativeIntValue: isSet(object.negativeIntValue) ? Long.fromString(object.negativeIntValue) : Long.ZERO,
+      positiveIntValue: isSet(object.positiveIntValue) ? Long.fromValue(object.positiveIntValue) : Long.UZERO,
+      negativeIntValue: isSet(object.negativeIntValue) ? Long.fromValue(object.negativeIntValue) : Long.ZERO,
       doubleValue: isSet(object.doubleValue) ? Number(object.doubleValue) : 0,
       stringValue: isSet(object.stringValue) ? bytesFromBase64(object.stringValue) : new Uint8Array(),
       aggregateValue: isSet(object.aggregateValue) ? String(object.aggregateValue) : "",
@@ -3774,7 +3744,7 @@ export const GeneratedCodeInfo_Annotation = {
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") return globalThis;
   if (typeof self !== "undefined") return self;
   if (typeof window !== "undefined") return window;
@@ -3783,7 +3753,7 @@ var globalThis: any = (() => {
 })();
 
 const atob: (b64: string) => string =
-  globalThis.atob || ((b64) => globalThis.Buffer.from(b64, "base64").toString("binary"));
+  tsProtoGlobalThis.atob || ((b64) => tsProtoGlobalThis.Buffer.from(b64, "base64").toString("binary"));
 function bytesFromBase64(b64: string): Uint8Array {
   const bin = atob(b64);
   const arr = new Uint8Array(bin.length);
@@ -3794,7 +3764,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 const btoa: (bin: string) => string =
-  globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
+  tsProtoGlobalThis.btoa || ((bin) => tsProtoGlobalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
   arr.forEach((byte) => {

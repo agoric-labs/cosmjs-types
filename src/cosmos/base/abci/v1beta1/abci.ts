@@ -266,7 +266,7 @@ export const TxResponse = {
 
   fromJSON(object: any): TxResponse {
     return {
-      height: isSet(object.height) ? Long.fromString(object.height) : Long.ZERO,
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
       txhash: isSet(object.txhash) ? String(object.txhash) : "",
       codespace: isSet(object.codespace) ? String(object.codespace) : "",
       code: isSet(object.code) ? Number(object.code) : 0,
@@ -274,8 +274,8 @@ export const TxResponse = {
       rawLog: isSet(object.rawLog) ? String(object.rawLog) : "",
       logs: Array.isArray(object?.logs) ? object.logs.map((e: any) => ABCIMessageLog.fromJSON(e)) : [],
       info: isSet(object.info) ? String(object.info) : "",
-      gasWanted: isSet(object.gasWanted) ? Long.fromString(object.gasWanted) : Long.ZERO,
-      gasUsed: isSet(object.gasUsed) ? Long.fromString(object.gasUsed) : Long.ZERO,
+      gasWanted: isSet(object.gasWanted) ? Long.fromValue(object.gasWanted) : Long.ZERO,
+      gasUsed: isSet(object.gasUsed) ? Long.fromValue(object.gasUsed) : Long.ZERO,
       tx: isSet(object.tx) ? Any.fromJSON(object.tx) : undefined,
       timestamp: isSet(object.timestamp) ? String(object.timestamp) : "",
       events: Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [],
@@ -563,8 +563,8 @@ export const GasInfo = {
 
   fromJSON(object: any): GasInfo {
     return {
-      gasWanted: isSet(object.gasWanted) ? Long.fromString(object.gasWanted) : Long.UZERO,
-      gasUsed: isSet(object.gasUsed) ? Long.fromString(object.gasUsed) : Long.UZERO,
+      gasWanted: isSet(object.gasWanted) ? Long.fromValue(object.gasWanted) : Long.UZERO,
+      gasUsed: isSet(object.gasUsed) ? Long.fromValue(object.gasUsed) : Long.UZERO,
     };
   },
 
@@ -903,11 +903,11 @@ export const SearchTxsResult = {
 
   fromJSON(object: any): SearchTxsResult {
     return {
-      totalCount: isSet(object.totalCount) ? Long.fromString(object.totalCount) : Long.UZERO,
-      count: isSet(object.count) ? Long.fromString(object.count) : Long.UZERO,
-      pageNumber: isSet(object.pageNumber) ? Long.fromString(object.pageNumber) : Long.UZERO,
-      pageTotal: isSet(object.pageTotal) ? Long.fromString(object.pageTotal) : Long.UZERO,
-      limit: isSet(object.limit) ? Long.fromString(object.limit) : Long.UZERO,
+      totalCount: isSet(object.totalCount) ? Long.fromValue(object.totalCount) : Long.UZERO,
+      count: isSet(object.count) ? Long.fromValue(object.count) : Long.UZERO,
+      pageNumber: isSet(object.pageNumber) ? Long.fromValue(object.pageNumber) : Long.UZERO,
+      pageTotal: isSet(object.pageTotal) ? Long.fromValue(object.pageTotal) : Long.UZERO,
+      limit: isSet(object.limit) ? Long.fromValue(object.limit) : Long.UZERO,
       txs: Array.isArray(object?.txs) ? object.txs.map((e: any) => TxResponse.fromJSON(e)) : [],
     };
   },
@@ -953,7 +953,7 @@ export const SearchTxsResult = {
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") return globalThis;
   if (typeof self !== "undefined") return self;
   if (typeof window !== "undefined") return window;
@@ -962,7 +962,7 @@ var globalThis: any = (() => {
 })();
 
 const atob: (b64: string) => string =
-  globalThis.atob || ((b64) => globalThis.Buffer.from(b64, "base64").toString("binary"));
+  tsProtoGlobalThis.atob || ((b64) => tsProtoGlobalThis.Buffer.from(b64, "base64").toString("binary"));
 function bytesFromBase64(b64: string): Uint8Array {
   const bin = atob(b64);
   const arr = new Uint8Array(bin.length);
@@ -973,7 +973,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 const btoa: (bin: string) => string =
-  globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
+  tsProtoGlobalThis.btoa || ((bin) => tsProtoGlobalThis.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
   arr.forEach((byte) => {
