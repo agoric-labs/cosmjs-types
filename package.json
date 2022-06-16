@@ -40,8 +40,11 @@
     "@types/long": "^4.0.1",
     "@types/node": "^15.6.2",
     "prettier": "^2.6",
-    "ts-proto": "^1.110",
+    "ts-proto": "agoric-labs/ts-proto#Agoric-built",
     "typescript": "~4.4"
+  },
+  "resolutions": {
+    "protobufjs": "agoric-labs/protobuf.js#Agoric-built"
   },
   "packageManager": "yarn@3.1.0"
 }
