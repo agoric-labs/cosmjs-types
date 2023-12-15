@@ -18,27 +18,19 @@ export interface GenericAuthorization {
  */
 export interface Grant {
   authorization?: Any;
-  /**
-   * time when the grant will expire and will be pruned. If null, then the grant
-   * doesn't have a time expiration (other conditions  in `authorization`
-   * may apply to invalidate the grant)
-   */
-  expiration?: Timestamp;
+  expiration: Timestamp;
 }
 /**
  * GrantAuthorization extends a grant with both the addresses of the grantee and granter.
  * It is used in genesis.proto and query.proto
+ *
+ * Since: cosmos-sdk 0.45.2
  */
 export interface GrantAuthorization {
   granter: string;
   grantee: string;
   authorization?: Any;
-  expiration?: Timestamp;
-}
-/** GrantQueueItem contains the list of TypeURL of a sdk.Msg. */
-export interface GrantQueueItem {
-  /** msg_type_urls contains the list of TypeURL of a sdk.Msg. */
-  msgTypeUrls: string[];
+  expiration: Timestamp;
 }
 function createBaseGenericAuthorization(): GenericAuthorization {
   return {
@@ -89,7 +81,7 @@ export const GenericAuthorization = {
 function createBaseGrant(): Grant {
   return {
     authorization: undefined,
-    expiration: undefined,
+    expiration: Timestamp.fromPartial({}),
   };
 }
 export const Grant = {
@@ -152,7 +144,7 @@ function createBaseGrantAuthorization(): GrantAuthorization {
     granter: "",
     grantee: "",
     authorization: undefined,
-    expiration: undefined,
+    expiration: Timestamp.fromPartial({}),
   };
 }
 export const GrantAuthorization = {
@@ -225,56 +217,6 @@ export const GrantAuthorization = {
     if (object.expiration !== undefined && object.expiration !== null) {
       message.expiration = Timestamp.fromPartial(object.expiration);
     }
-    return message;
-  },
-};
-function createBaseGrantQueueItem(): GrantQueueItem {
-  return {
-    msgTypeUrls: [],
-  };
-}
-export const GrantQueueItem = {
-  typeUrl: "/cosmos.authz.v1beta1.GrantQueueItem",
-  encode(message: GrantQueueItem, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
-    for (const v of message.msgTypeUrls) {
-      writer.uint32(10).string(v!);
-    }
-    return writer;
-  },
-  decode(input: BinaryReader | Uint8Array, length?: number): GrantQueueItem {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGrantQueueItem();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.msgTypeUrls.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object: any): GrantQueueItem {
-    const obj = createBaseGrantQueueItem();
-    if (Array.isArray(object?.msgTypeUrls)) obj.msgTypeUrls = object.msgTypeUrls.map((e: any) => String(e));
-    return obj;
-  },
-  toJSON(message: GrantQueueItem): unknown {
-    const obj: any = {};
-    if (message.msgTypeUrls) {
-      obj.msgTypeUrls = message.msgTypeUrls.map((e) => e);
-    } else {
-      obj.msgTypeUrls = [];
-    }
-    return obj;
-  },
-  fromPartial<I extends Exact<DeepPartial<GrantQueueItem>, I>>(object: I): GrantQueueItem {
-    const message = createBaseGrantQueueItem();
-    message.msgTypeUrls = object.msgTypeUrls?.map((e) => e) || [];
     return message;
   },
 };
